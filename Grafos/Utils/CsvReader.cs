@@ -25,13 +25,13 @@ namespace Grafos.Utils
 
                         if (!verticesEncontrados.Contains(origem))
                         {
-                            grafo.AdicionarVertice(new Vertice(origem));
+                            grafo.AdicionarVertice(origem);
                             verticesEncontrados.Add(origem);
                         }
 
                         if (!verticesEncontrados.Contains(destino))
                         {
-                            grafo.AdicionarVertice(new Vertice(destino));
+                            grafo.AdicionarVertice(destino);
                             verticesEncontrados.Add(destino);
                         }
 

@@ -8,8 +8,9 @@ public class Grafo(int vertices)
     public List<Vertice> Vertices { get; } = [];
     public List<Aresta> Arestas { get; } = [];
 
-    public void AdicionarVertice(Vertice vertice)
+    public void AdicionarVertice(string novoVertice)
     {
+        var vertice = new Vertice(novoVertice); 
         Vertices.Add(vertice);
         var qtdVertices = Vertices.Count;
         var novaMatriz = new int[qtdVertices, qtdVertices];
@@ -31,7 +32,6 @@ public class Grafo(int vertices)
         foreach (var aresta in arestasParaRemover)
         {
             Arestas.Remove(aresta);
-
         }
 
         AtualizarMatriz();

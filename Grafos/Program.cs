@@ -9,6 +9,8 @@ Console.WriteLine("Grafo carregado com sucesso!");
 Console.WriteLine(grafo.ExibirMatriz());
 Console.WriteLine("Digite uma das opções abaixo:");
 Console.WriteLine("1 - Remover vértice:");
+Console.WriteLine("2 - Adicionar vértice:");
+
 var opcao = int.Parse(Console.ReadLine());
 switch (opcao)
 {
@@ -20,7 +22,13 @@ switch (opcao)
         Console.WriteLine(grafo.ExibirMatriz());
         Console.WriteLine($"Vertice {verticeParaRemover} removido com sucesso!");
         break;
-
+    case 2:
+        Console.WriteLine("Qual o nome do vértice que deseja adicionar?");
+        var novoVertice = Console.ReadLine();
+        grafo.AdicionarVertice(novoVertice);
+        Console.WriteLine(grafo.ExibirMatriz());
+        Console.WriteLine("Vértice adicionado com sucesso!");
+        break;
 }
 
 

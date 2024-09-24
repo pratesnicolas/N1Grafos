@@ -13,14 +13,55 @@ public class Grafo(int vertices)
         Vertices.Add(vertice);
         var qtdVertices = Vertices.Count;
         var novaMatriz = new int[qtdVertices, qtdVertices];
-        for(int i = 0; i < qtdVertices - 1;  i++)
+        for (int i = 0; i < qtdVertices - 1; i++)
         {
-            for(int j = 0; j < qtdVertices - 1; j++)
+            for (int j = 0; j < qtdVertices - 1; j++)
             {
                 novaMatriz[i, j] = Matriz[i, j];
             }
         }
         Matriz = novaMatriz;
+    }
+
+    public void RemoverVertice(string nomeVertice)
+    {
+        var vertice = Vertices.FirstOrDefault(x => x.Nome == nomeVertice.Trim());
+        Vertices.Remove(vertice);
+        var arestasParaRemover = Arestas.Where(x => x.Origem.Nome == vertice.Nome || x.Destino.Nome == vertice.Nome).ToList();
+        foreach (var aresta in arestasParaRemover)
+        {
+            Arestas.Remove(aresta);
+
+        }
+
+        AtualizarMatriz();
+    }
+
+    public void AtualizarMatriz()
+    {
+        int qtdVertices = Vertices.Count;
+        var novaMatriz = new int[qtdVertices, qtdVertices];
+
+        for (int i = 0; i < qtdVertices; i++)
+        {
+            for (int j = 0; j < qtdVertices; j++)
+            {
+                novaMatriz[i, j] = Matriz[i, j];
+            }
+        }
+
+        Matriz = novaMatriz;
+    }
+
+    public string MostrarVertices()
+    {
+        string vertices = string.Empty;
+        foreach (var vertice in Vertices)
+        {
+            vertices += (" " + vertice.Nome);
+        }
+
+        return vertices;
     }
 
     public string ExibirMatriz()
@@ -31,19 +72,19 @@ public class Grafo(int vertices)
         resultado.Append("    ");
         for (int i = 0; i < qtdVertices; i++)
         {
-            resultado.Append(Vertices[i].Nome + " ");
+            resultado.Append(Vertices[i].Nome + "   ");
         }
-        resultado.AppendLine(); 
+        resultado.AppendLine();
         for (int i = 0; i < qtdVertices; i++)
         {
-            resultado.Append(Vertices[i].Nome + " ");
+            resultado.Append(Vertices[i].Nome + "   ");
             for (int j = 0; j < qtdVertices; j++)
             {
                 resultado.Append(Matriz[i, j] + "   ");
             }
-            resultado.AppendLine(); 
+            resultado.AppendLine();
         }
-        return resultado.ToString(); 
+        return resultado.ToString();
     }
 
     public void AdicionarAresta(string origem,
@@ -53,7 +94,7 @@ public class Grafo(int vertices)
         Vertice verticeOrigem = Vertices.Find(x => x.Nome == origem);
         Vertice verticeDestino = Vertices.Find(x => x.Nome == destino);
 
-        if(verticeOrigem is null || verticeDestino is null) 
+        if (verticeOrigem is null || verticeDestino is null)
         {
             throw new Exception("O vertice de origem ou de destino não existem.");
         }

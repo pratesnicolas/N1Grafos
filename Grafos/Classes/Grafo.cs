@@ -91,8 +91,8 @@ public class Grafo(int vertices)
                                 string destino,
                                 int peso)
     {
-        Vertice verticeOrigem = Vertices.Find(x => x.Nome == origem);
-        Vertice verticeDestino = Vertices.Find(x => x.Nome == destino);
+        Vertice verticeOrigem = Vertices.Find(x => x.Nome.Equals(origem, StringComparison.CurrentCultureIgnoreCase));
+        Vertice verticeDestino = Vertices.Find(x => x.Nome.Equals(destino, StringComparison.CurrentCultureIgnoreCase));
 
         if (verticeOrigem is null || verticeDestino is null)
         {

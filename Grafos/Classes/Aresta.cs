@@ -12,4 +12,6 @@ public class Aresta(Vertice origem,
         //Verificar a lógica
         return Origem.Nome == Destino.Nome;
     }
+    public bool PossuiValor()
+    => Peso > 0;
 }

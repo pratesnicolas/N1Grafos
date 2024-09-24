@@ -37,6 +37,52 @@ public class Grafo(int vertices)
         AtualizarMatriz();
     }
 
+   
+
+    public string MostrarVertices()
+    {
+        string vertices = string.Empty;
+        foreach (var vertice in Vertices)
+        {
+            vertices += (" " + vertice.Nome);
+        }
+
+        return vertices;
+    }
+
+    public void AdicionarAresta(string origem,
+                                string destino,
+                                int peso)
+    {
+        Vertice verticeOrigem = Vertices.Find(x => x.Nome.Equals(origem, StringComparison.CurrentCultureIgnoreCase));
+        Vertice verticeDestino = Vertices.Find(x => x.Nome.Equals(destino, StringComparison.CurrentCultureIgnoreCase));
+
+        if (verticeOrigem is null || verticeDestino is null)
+        {
+            throw new Exception("O vertice de origem ou de destino não existem.");
+        }
+
+        var aresta = new Aresta(verticeOrigem,
+                                verticeDestino,
+                                peso);
+        Arestas.Add(aresta);
+
+        Matriz[Vertices.IndexOf(verticeOrigem), Vertices.IndexOf(verticeDestino)] = aresta.Peso;
+    }
+    public void RemoverAresta(string origem,
+                              string destino)
+    {
+        Vertice verticeOrigem = Vertices.Find(x => x.Nome.Equals(origem, StringComparison.CurrentCultureIgnoreCase));
+        Vertice verticeDestino = Vertices.Find(x => x.Nome.Equals(destino, StringComparison.CurrentCultureIgnoreCase));
+
+        if (verticeOrigem is null || verticeDestino is null)
+        {
+            throw new Exception("O vertice de origem ou de destino não existem.");
+        }
+
+        Matriz[Vertices.IndexOf(verticeOrigem), Vertices.IndexOf(verticeDestino)] = 0;
+    }
+
     public void AtualizarMatriz()
     {
         int qtdVertices = Vertices.Count;
@@ -51,17 +97,6 @@ public class Grafo(int vertices)
         }
 
         Matriz = novaMatriz;
-    }
-
-    public string MostrarVertices()
-    {
-        string vertices = string.Empty;
-        foreach (var vertice in Vertices)
-        {
-            vertices += (" " + vertice.Nome);
-        }
-
-        return vertices;
     }
 
     public string ExibirMatriz()
@@ -86,27 +121,6 @@ public class Grafo(int vertices)
         }
         return resultado.ToString();
     }
-
-    public void AdicionarAresta(string origem,
-                                string destino,
-                                int peso)
-    {
-        Vertice verticeOrigem = Vertices.Find(x => x.Nome.Equals(origem, StringComparison.CurrentCultureIgnoreCase));
-        Vertice verticeDestino = Vertices.Find(x => x.Nome.Equals(destino, StringComparison.CurrentCultureIgnoreCase));
-
-        if (verticeOrigem is null || verticeDestino is null)
-        {
-            throw new Exception("O vertice de origem ou de destino não existem.");
-        }
-
-        var aresta = new Aresta(verticeOrigem,
-                                verticeDestino,
-                                peso);
-        Arestas.Add(aresta);
-
-        Matriz[Vertices.IndexOf(verticeOrigem), Vertices.IndexOf(verticeDestino)] = aresta.Peso;
-    }
-
     public static Grafo NovoGrafo(int vertices)
     => new(vertices);
 }

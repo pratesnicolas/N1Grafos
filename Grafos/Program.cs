@@ -8,9 +8,14 @@ var grafo = CsvReader.ProcessarCsv(caminho);
 Console.WriteLine("Grafo carregado com sucesso!");
 Console.WriteLine(grafo.ExibirMatriz());
 Console.WriteLine("Digite uma das opções abaixo:");
-Console.WriteLine("1 - Remover vértice:");
-Console.WriteLine("2 - Adicionar vértice:");
-Console.WriteLine("3 - Adicionar aresta:");
+Console.WriteLine("1 - Remover vértice.");
+Console.WriteLine("2 - Adicionar vértice.");
+Console.WriteLine("3 - Adicionar aresta.");
+Console.WriteLine("4 - Remover aresta.");
+Console.WriteLine("5 - Atualizar aresta.");
+Console.WriteLine("6 - Atualizar vértice.");
+Console.WriteLine("7 - Consultar aresta.");
+Console.WriteLine("8 - Consultar vértice.");
 
 var opcao = int.Parse(Console.ReadLine());
 switch (opcao)
@@ -30,15 +35,24 @@ switch (opcao)
         Console.WriteLine(grafo.ExibirMatriz());
         Console.WriteLine("Vértice adicionado com sucesso!");
         break;
-     case 3:
+    case 3:
         Console.WriteLine("Informe o vértice de origem:");
         var verticeOrigem = Console.ReadLine();
         Console.WriteLine("Informe o vértice de destino:");
         var verticeDestino = Console.ReadLine();
         Console.WriteLine("Informe o peso da aresta, caso não tenha, digite 0:");
         var peso = int.Parse(Console.ReadLine());
-        grafo.AdicionarAresta(verticeOrigem,verticeDestino, peso);
+        grafo.AdicionarAresta(verticeOrigem, verticeDestino, peso);
         Console.WriteLine("Aresta adicionada com sucesso!");
+        Console.WriteLine(grafo.ExibirMatriz());
+        break;
+    case 4:
+        Console.WriteLine("Informe o vértice de origem:");
+        var origem = Console.ReadLine();
+        Console.WriteLine("Informe o vértice de destino:");
+        var destino = Console.ReadLine();
+        grafo.RemoverAresta(origem, destino);
+        Console.WriteLine("Aresta removida com sucesso!");
         Console.WriteLine(grafo.ExibirMatriz());
         break;
 }

@@ -28,26 +28,22 @@ public class Grafo(int vertices)
         var qtdVertices = Vertices.Count;
         var resultado = new StringBuilder();
 
-        // Adiciona os nomes dos vértices na primeira linha
-        resultado.Append("    "); // Espaço para alinhar a primeira coluna
+        resultado.Append("    ");
         for (int i = 0; i < qtdVertices; i++)
         {
             resultado.Append(Vertices[i].Nome + " ");
         }
-        resultado.AppendLine(); // Quebra de linha após a primeira linha
-
-        // Adiciona a matriz com os nomes dos vértices nas linhas e colunas
+        resultado.AppendLine(); 
         for (int i = 0; i < qtdVertices; i++)
         {
-            resultado.Append(Vertices[i].Nome + " "); // Adiciona o nome do vértice na linha
+            resultado.Append(Vertices[i].Nome + " ");
             for (int j = 0; j < qtdVertices; j++)
             {
-                resultado.Append(Matriz[i, j] + "   "); // Adiciona valor da aresta ou 0
+                resultado.Append(Matriz[i, j] + "   ");
             }
-            resultado.AppendLine(); // Quebra de linha após cada linha da matriz
+            resultado.AppendLine(); 
         }
-
-        return resultado.ToString(); // Retorna a string final
+        return resultado.ToString(); 
     }
 
     public void AdicionarAresta(string origem,

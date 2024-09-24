@@ -7,7 +7,15 @@ namespace Grafos.Utils
         public static Grafo ProcessarCsv(string caminho)
         {
             var grafo = Grafo.NovoGrafo(0); 
-            var verticesEncontrados = new HashSet<string>(); 
+            var verticesEncontrados = new HashSet<string>();
+
+            if (string.IsNullOrEmpty(caminho))
+            {
+                Console.WriteLine("\nNenhum CSV informado, portanto, começando com o Grafo vazio.\n\n");
+                return grafo;
+            } 
+               
+
             using (var reader = new StreamReader(caminho))
             {
                 var primeiraLinha = reader.ReadLine();
@@ -15,7 +23,7 @@ namespace Grafos.Utils
                 while (!reader.EndOfStream)
                 {
                     var linha = reader.ReadLine();
-                    var valores = linha.Split(','); 
+                    var valores = linha.Split(',');
 
                     if (valores.Length == 3)
                     {
@@ -44,6 +52,7 @@ namespace Grafos.Utils
                 }
             }
 
+            Console.WriteLine("\nGrafo carregado com sucesso!\n\n");
             return grafo;
 
         }

@@ -25,7 +25,6 @@ public sealed class Program
             Console.WriteLine("6 - Atualizar vértice.");
             Console.WriteLine("7 - Consultar aresta.");
             Console.WriteLine("8 - Consultar vértice.");
-            Console.WriteLine("8 - Exibir características do grafo.");
             Console.WriteLine("9 - Submenu: Funções.");
             Console.WriteLine("0 - Encerrar.");
 
@@ -436,7 +435,6 @@ public sealed class Program
             Console.Clear();
         }
     }
-
     public static void ShowVertices(Grafo grafo)
     {
         for (var i = 0; i < grafo.Vertices.Count; i++)

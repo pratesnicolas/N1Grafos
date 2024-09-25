@@ -14,7 +14,7 @@ public class Grafo(int vertices)
     {
         var idx = Vertices.Count;
         var vertice = new Vertice(novoVertice, IndiceParaLetra(idx));
-        if(Vertices.Any(x => x.Nome == novoVertice.Trim()))
+        if (Vertices.Any(x => x.Nome == novoVertice.Trim()))
         {
             Console.WriteLine($"O vértice {novoVertice} já existe na matriz.");
             return;
@@ -88,11 +88,13 @@ public class Grafo(int vertices)
             grauSaidas++;
         }
 
-        if (vertice != null)
+        if (vertice is not null)
         {
             Console.WriteLine($"\nVertice consultado: {vertice.Nome}");
             Console.WriteLine($"Apelido: \"{vertice.Apelido}\"");
             Console.WriteLine($"\nGraus de Entrada e Saída: \n\n G(E) = {grauEntradas} | G(S) = {grauSaidas}");
+            Console.WriteLine($"\nPossui laço: {Arestas.Count(x => x.Origem.Nome == vertice.Nome && x.Destino.Nome == vertice.Nome)}");
+
         }
         else
         {
@@ -197,7 +199,7 @@ public class Grafo(int vertices)
         Vertice verticeDestino = Vertices.Find(x => x.Nome.Equals(destino, StringComparison.CurrentCultureIgnoreCase));
 
 
-       
+
         if (verticeOrigem is null || verticeDestino is null)
         {
             throw new Exception("O vertice de origem ou de destino não existem.");
@@ -542,7 +544,7 @@ public class Grafo(int vertices)
 
         return ordemTopologica;
     }
-  
+
     public void EncontrarVerticesIndependentes()
     {
         var verticesIndependentes = string.Empty;

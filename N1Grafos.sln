@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34310.174
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N1Grafos", "N1Grafos.csproj", "{002D037E-345B-44DA-98B4-5C6A7A59C0D7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grafos", "Grafos\Grafos.csproj", "{6A47CE2E-DE22-4EC1-865D-002EA039866D}"
 EndProject
 Global
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{002D037E-345B-44DA-98B4-5C6A7A59C0D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{002D037E-345B-44DA-98B4-5C6A7A59C0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{002D037E-345B-44DA-98B4-5C6A7A59C0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{002D037E-345B-44DA-98B4-5C6A7A59C0D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A47CE2E-DE22-4EC1-865D-002EA039866D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A47CE2E-DE22-4EC1-865D-002EA039866D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A47CE2E-DE22-4EC1-865D-002EA039866D}.Release|Any CPU.ActiveCfg = Release|Any CPU

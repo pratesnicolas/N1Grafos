@@ -1,0 +1,8 @@
+Vertice_Origem,Vertice_Destino,Peso
+Impressora de Máscara,Litografia,4
+Litografia,Deposição de Material,3
+Deposição de Material,Gravação a Laser,6
+Litografia,Tratamento Químico,5
+Litografia,Camada de Oxidação,7
+Deposição de Material,Tratamento Químico,8
+Deposição de Material,Camada de Oxidação,10

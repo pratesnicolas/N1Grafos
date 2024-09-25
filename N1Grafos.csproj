@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Grafos\**" />
+    <Content Remove="Grafos\**" />
+    <EmbeddedResource Remove="Grafos\**" />
+    <None Remove="Grafos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 

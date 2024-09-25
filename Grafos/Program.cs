@@ -122,6 +122,8 @@ public sealed class Program
             Console.WriteLine("1 - Verificar dependências de uma máquina específica.");
             Console.WriteLine("2 - Verificar o tempo da linha de produção a partir de uma máquina específica.");
             Console.WriteLine("3 - Exibir caminho crítico.");
+            Console.WriteLine("4 - Exibir máquinas independentes.");
+            Console.WriteLine("5 - Exibir o maior gargalo entre as máquinas.");
             Console.WriteLine("0 - Voltar ao menu principal.");
 
             Console.WriteLine("\nEscolha sua opção: ");
@@ -142,6 +144,12 @@ public sealed class Program
                         break;
                     case 3:
                         GetCriticalPath(grafo);
+                        break;
+                    case 4:
+                        MostrarMaquinasIndependentes(grafo);
+                        break;
+                    case 5:
+                        MostrarMaiorGargalo(grafo);
                         break;
                     default:
                         Console.Clear();
@@ -183,19 +191,6 @@ public sealed class Program
 
     public static void AddAresta(Grafo grafo)
     {
-        Console.WriteLine("\nInforme o vértice de origem:");
-        var origem = Console.ReadLine();
-        Console.WriteLine("\nInforme o vértice de destino:");
-        var destino = Console.ReadLine();
-        Console.WriteLine("\nInforme o peso da aresta:");
-        var peso = int.Parse(Console.ReadLine());
-        grafo.AdicionarAresta(origem, destino, peso);
-        Console.WriteLine($"\nAresta entre {origem /*origem.Nome*/} e {destino /*destino.Nome*/} adicionada com sucesso!");
-        Console.WriteLine(grafo.ExibirMatriz());
-    }
-
-    public static void RemoveAresta(Grafo grafo)
-    {
         Console.WriteLine("\nVértices disponiveis:\n");
 
         for (var i = 0; i < grafo.Vertices.Count; i++)
@@ -203,6 +198,25 @@ public sealed class Program
             Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
         }
 
+        Console.WriteLine("\nInforme o código do vértice de origem:");
+        var indexOrigem = int.Parse(Console.ReadLine()) - 1;
+        Console.WriteLine("\nInforme o código do vértice de destino:");
+        var indexDestino = int.Parse(Console.ReadLine()) -1;
+        Console.WriteLine("\nInforme o peso da aresta:");
+        var peso = int.Parse(Console.ReadLine());
+
+        var origem = grafo.Vertices[indexOrigem].Nome;
+        var destino = grafo.Vertices[indexDestino].Nome;
+        grafo.AdicionarAresta(origem, destino, peso);
+        Console.WriteLine($"\nAresta entre {origem} e {destino} adicionada com sucesso!");
+        Console.WriteLine(grafo.ExibirMatriz());
+    }
+
+    public static void RemoveAresta(Grafo grafo)
+    {
+        Console.WriteLine("\nVértices disponiveis:\n");
+        ShowVertices(grafo);
+        
         Console.Write("\nInforme o código do vértice de origem: ");
         var idxStartVertice = int.Parse(Console.ReadLine()) - 1;
         Console.WriteLine("\nInforme o código do vértice de destino: ");
@@ -384,9 +398,41 @@ public sealed class Program
 
     }
 
-    public static void ShowMaquinasParalelas (Grafo grafo)
+    public static void MostrarMaiorGargalo(Grafo grafo)
     {
-      
+        var continueDisplay = true;
 
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.VerificarMaiorPeso();
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
     }
-}
+
+    public static void MostrarMaquinasIndependentes(Grafo grafo)
+    {
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.EncontrarVerticesIndependentes();
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+    }
+
+    public static void ShowVertices(Grafo grafo)
+    {
+        for (var i = 0; i < grafo.Vertices.Count; i++)
+        {
+            Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
+        }
+    }
+} 

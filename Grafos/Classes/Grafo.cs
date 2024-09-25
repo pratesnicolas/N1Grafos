@@ -12,7 +12,7 @@ public class Grafo(int vertices)
     public void AdicionarVertice(string novoVertice)
     {
         var idx = Vertices.Count;
-        var vertice = new Vertice(novoVertice, IndiceParaLetra(idx)); 
+        var vertice = new Vertice(novoVertice, IndiceParaLetra(idx));
         Vertices.Add(vertice);
         var qtdVertices = Vertices.Count;
         var novaMatriz = new int[qtdVertices, qtdVertices];
@@ -29,7 +29,7 @@ public class Grafo(int vertices)
     public void RemoverVertice(string nomeVertice)
     {
         var vertice = Vertices.FirstOrDefault(x => x.Nome == nomeVertice.Trim());
-        if(vertice is null)
+        if (vertice is null)
         {
             Console.WriteLine($"Vértice {nomeVertice} não encontrado.");
             return;
@@ -77,7 +77,7 @@ public class Grafo(int vertices)
             grauEntradas++;
             grauSaidas++;
         }
-        
+
         if (vertice != null)
         {
             Console.WriteLine($"\nVertice consultado: {vertice.Nome}");
@@ -296,10 +296,10 @@ public class Grafo(int vertices)
         VerificarDependenciasRecursivo(maquina, visitados, 0);
     }
 
-    public int VerificarMaiorPeso()
+    public void VerificarMaiorPeso()
     {
-        var maiorPeso = Arestas.Max().Peso;
-        return maiorPeso;
+        var arestaComMaiorPeso = Arestas.MaxBy(x => x.Peso);
+        Console.WriteLine($"O maior gargalo é entre {arestaComMaiorPeso.Origem.Nome} e {arestaComMaiorPeso.Destino.Nome} e o tempo é de {arestaComMaiorPeso.Peso}");
     }
 
     private void VerificarDependenciasRecursivo(Vertice maquina, HashSet<Vertice> visitados, int nivel)
@@ -348,7 +348,7 @@ public class Grafo(int vertices)
 
         Console.WriteLine($"\nTempo total do caminho crítico: {tempoTotal} horas");
 
-        
+
     }
 
     public List<Vertice> ObterCaminhoCritico()
@@ -523,9 +523,26 @@ public class Grafo(int vertices)
 
         return ordemTopologica;
     }
+  
+    public void EncontrarVerticesIndependentes()
+    {
+        var verticesIndependentes = string.Empty;
+
+        foreach (var vertice in Vertices)
+        {
+            if (!Arestas.Any(x => x.Destino.Nome == vertice.Nome.Trim()))
+            {
+                verticesIndependentes += $" " + vertice.Nome;
+            }
+        }
+        Console.WriteLine($"Vértices independentes: {verticesIndependentes}");
+    }
 
     // Função auxiliar para visitar os vértices na ordem topológica
-    private void VisitarVertice(Vertice vertice, HashSet<Vertice> visitados, List<Vertice> ordemTopologica, List<Aresta> arestas)
+    private void VisitarVertice(Vertice vertice,
+                                HashSet<Vertice> visitados,
+                                List<Vertice> ordemTopologica,
+                                List<Aresta> arestas)
     {
         visitados.Add(vertice);
 

@@ -90,10 +90,10 @@ public class Grafo(int vertices)
 
         if (vertice is not null)
         {
-            Console.WriteLine($"\nVertice consultado: {vertice.Nome}");
+            Console.WriteLine($"\nVertice: {vertice.Nome}");
             Console.WriteLine($"Apelido: \"{vertice.Apelido}\"");
-            Console.WriteLine($"\nGraus de Entrada e Saída: \n\n G(E) = {grauEntradas} | G(S) = {grauSaidas}");
-            Console.WriteLine($"\nPossui laço: {Arestas.Count(x => x.Origem.Nome == vertice.Nome && x.Destino.Nome == vertice.Nome)}");
+            Console.WriteLine($"\nGraus de Entrada e Saída: \n G(E) = {grauEntradas} | G(S) = {grauSaidas}");
+            Console.WriteLine($"\nPossui laço: {(Arestas.Any(x => x.Origem.Nome == vertice.Nome && x.Destino.Nome == vertice.Nome) ? "Sim" : "Não")}");
 
         }
         else
@@ -557,6 +557,27 @@ public class Grafo(int vertices)
             }
         }
         Console.WriteLine($"Vértices independentes: {verticesIndependentes}");
+    }
+
+    public void MostrarCaracteristicas()
+    {
+        var caracteristicas = string.Empty;
+        Console.WriteLine("Tipo de grafo: Digrafo");
+        foreach (var vertice in Vertices)
+        {
+            this.ConsultarVertice(vertice);            
+        }
+        if(Arestas.Any(x => x.PossuiValor()))
+        {
+            Console.WriteLine("\nO grafo possui arestas valoradas.");
+
+        }
+        else
+        {
+            Console.WriteLine("\nO grafo não possui arestas valoradas.");
+
+        }
+
     }
 
     // Função auxiliar para visitar os vértices na ordem topológica

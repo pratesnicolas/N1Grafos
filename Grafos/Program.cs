@@ -26,6 +26,7 @@ public sealed class Program
             Console.WriteLine("7 - Consultar aresta.");
             Console.WriteLine("8 - Consultar vértice.");
             Console.WriteLine("9 - Submenu: Funções.");
+            Console.WriteLine("10 - Listar informações do grafo.");
             Console.WriteLine("0 - Encerrar.");
 
             Console.WriteLine("\nEscolha sua opção: ");
@@ -64,6 +65,9 @@ public sealed class Program
                         break;
                     case 9:
                         ShowFunctionsMenu(grafo);
+                        break;
+                    case 10:
+                        MostrarCaracteristicas(grafo);
                         break;
                     default:
                         Console.Clear();
@@ -429,6 +433,21 @@ public sealed class Program
         {
             Console.Clear();
             grafo.EncontrarVerticesIndependentes();
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+    }
+
+    public static void MostrarCaracteristicas(Grafo grafo)
+    {
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.MostrarCaracteristicas();
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;

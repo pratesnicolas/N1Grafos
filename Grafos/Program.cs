@@ -25,7 +25,7 @@ public sealed class Program
             Console.WriteLine("6 - Atualizar vértice.");
             Console.WriteLine("7 - Consultar aresta.");
             Console.WriteLine("8 - Consultar vértice.");
-            Console.WriteLine("9 - Verificar dependências.");
+            Console.WriteLine("9 - Submenu: Funções.");
             Console.WriteLine("0 - Encerrar.");
 
             Console.WriteLine("\nEscolha sua opção: ");
@@ -63,7 +63,7 @@ public sealed class Program
                         ShowVertice(grafo);
                         break;
                     case 9:
-                        DisplayDependency(grafo);
+                        ShowFunctionsMenu(grafo);
                         break;
                     default:
                         Console.Clear();
@@ -81,7 +81,8 @@ public sealed class Program
                      break;
                 }
             }
-            
+
+            Console.Clear();
         }
     }
 
@@ -107,6 +108,57 @@ public sealed class Program
             Console.ReadKey();
             continueDisplay = false;
             Console.Clear();
+        }
+    }
+
+    public static void ShowFunctionsMenu(Grafo grafo)
+    {
+        var continueRunning = true;
+
+        while (continueRunning)
+        {
+            Console.Clear();
+            Console.WriteLine("---- SUBMENU - FUNÇÕES DO SISTEMA ----");
+            Console.WriteLine("1 - Verificar dependências de uma máquina específica.");
+            Console.WriteLine("2 - Verificar o tempo da linha de produção a partir de uma máquina específica.");
+            Console.WriteLine("3 - Exibir caminho crítico.");
+            Console.WriteLine("0 - Voltar ao menu principal.");
+
+            Console.WriteLine("\nEscolha sua opção: ");
+            var opcaoInput = Console.ReadLine();
+
+            if (int.TryParse(opcaoInput, out var opcao))
+            {
+                switch (opcao)
+                {
+                    case 0:
+                        continueRunning = false;
+                        break;
+                    case 1:
+                        DisplayDependency(grafo);
+                        break;
+                    case 2:
+                        VerifyProductionTime(grafo);
+                        break;
+                    case 3:
+                        GetCriticalPath(grafo);
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Opcao invalida. Tente novamente.");
+                        break;
+                }
+            }
+            else
+            {
+                switch (-1)
+                {
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Opcao invalida. Tente novamente.");
+                        break;
+                }
+            }
         }
     }
 
@@ -179,7 +231,7 @@ public sealed class Program
             Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
         }
 
-        Console.Write("\nInforme o código do vértice de origem:: ");
+        Console.Write("\nInforme o código do vértice de origem: ");
         var idxStartVertice = int.Parse(Console.ReadLine()) - 1;
         Console.WriteLine("\nInforme o código do vértice de destino:");
         var idxEndVertice = int.Parse(Console.ReadLine()) - 1;
@@ -260,20 +312,76 @@ public sealed class Program
 
     public static void ShowVertice(Grafo grafo)
     {
-        Console.WriteLine("\nInforme o vértice que deseja consultar:");
-        var vertice = Console.ReadLine();
+        Console.WriteLine("\nVértices disponiveis:\n");
+
+        for (var i = 0; i < grafo.Vertices.Count; i++)
+        {
+            Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome} ({grafo.Vertices[i].Apelido})");
+        }
+
+        Console.WriteLine("\nInforme o código do vértice que deseja consultar:");
+        var idxVertice = int.Parse(Console.ReadLine()) - 1;
 
         var continueDisplay = true;
 
         while (continueDisplay)
         {
             Console.Clear();
-            grafo.ConsultarVertice(vertice);
+            grafo.ConsultarVertice(grafo.Vertices[idxVertice]);
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;
             Console.Clear();
         }
         
+    }
+
+    public static void VerifyProductionTime(Grafo grafo)
+    {
+        Console.WriteLine("\nSelecione a máquina inicial:");
+
+        for (var i = 0; i < grafo.Vertices.Count; i++)
+        {
+            Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
+        }
+
+        var opcaoInput = Console.ReadLine();
+        var continueDisplay = true;
+
+        if (int.TryParse(opcaoInput, out var opcao) && opcao >= 1 && opcao <= grafo.Vertices.Count)
+        {
+            var maquinaInicial = grafo.Vertices[opcao - 1];
+
+            while (continueDisplay)
+            {
+                Console.Clear();
+                grafo.MostrarTempoProducaoMaquinas(maquinaInicial);
+                Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+                Console.ReadKey();
+                continueDisplay = false;
+                Console.Clear();
+            }
+        }
+        else
+        {
+            Console.WriteLine("Opção inválida. Tente novamente.");
+        }
+    }
+
+    public static void GetCriticalPath(Grafo grafo)
+    {
+
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.ExibirCaminhoCritico();
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+
     }
 }

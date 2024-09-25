@@ -27,6 +27,7 @@ public sealed class Program
             Console.WriteLine("8 - Consultar vértice.");
             Console.WriteLine("9 - Submenu: Funções.");
             Console.WriteLine("10 - Listar informações do grafo.");
+            Console.WriteLine("11 - Exibir pesos.");
             Console.WriteLine("0 - Encerrar.");
 
             Console.WriteLine("\nEscolha sua opção: ");
@@ -68,6 +69,9 @@ public sealed class Program
                         break;
                     case 10:
                         MostrarCaracteristicas(grafo);
+                        break;
+                    case 11:
+                        ExibirMatrizPesos(grafo);
                         break;
                     default:
                         Console.Clear();
@@ -176,7 +180,6 @@ public sealed class Program
         Console.WriteLine("\nEscolha qual o vértice que deseja remover:");
         ShowVertices(grafo);
 
-        Console.WriteLine(grafo.MostrarVertices());
         var indexVertice = int.Parse(Console.ReadLine()) - 1;
 
         var vertice = grafo.Vertices[indexVertice].Nome;
@@ -199,7 +202,6 @@ public sealed class Program
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;
-            Console.Clear();
         }
 
     }
@@ -448,6 +450,21 @@ public sealed class Program
         {
             Console.Clear();
             grafo.MostrarCaracteristicas();
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+    }
+
+    public static void ExibirMatrizPesos(Grafo grafo)
+    {
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.ExibirMatrizPesos();
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;

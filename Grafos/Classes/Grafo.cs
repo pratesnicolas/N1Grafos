@@ -17,6 +17,7 @@ public class Grafo(int vertices)
         if (Vertices.Any(x => x.Nome == novoVertice.Trim()))
         {
             Console.WriteLine($"O vértice {novoVertice} já existe na matriz.");
+            
             return;
 
         }
@@ -251,7 +252,7 @@ public class Grafo(int vertices)
         Matriz = novaMatriz;
     }
 
-    public string ExibirMatrizPesos()
+    public void ExibirMatrizPesos()
     {
         //Esta matriz exibe os pesos das arestas ao invés de informar se a aresta existe ou não, pesos 0 são considerados.
 
@@ -281,7 +282,7 @@ public class Grafo(int vertices)
             }
             resultado.AppendLine();
         }
-        return resultado.ToString();
+        Console.WriteLine(resultado.ToString());
     }
 
     public string ExibirMatriz()

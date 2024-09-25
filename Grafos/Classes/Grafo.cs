@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Drawing;
+using System.Text;
 
 namespace Grafos.Classes;
 
@@ -10,7 +11,8 @@ public class Grafo(int vertices)
 
     public void AdicionarVertice(string novoVertice)
     {
-        var vertice = new Vertice(novoVertice); 
+        var idx = Vertices.Count;
+        var vertice = new Vertice(novoVertice, IndiceParaLetra(idx)); 
         Vertices.Add(vertice);
         var qtdVertices = Vertices.Count;
         var novaMatriz = new int[qtdVertices, qtdVertices];
@@ -62,14 +64,13 @@ public class Grafo(int vertices)
         return vertices;
     }
 
-    public void ConsultarVertice(string nomeVertice)
+    public void ConsultarVertice(Vertice vertice)
     {
-        var vertice = Vertices.FirstOrDefault(x => x.Nome.Equals(nomeVertice.Trim(), StringComparison.CurrentCultureIgnoreCase));
 
         var existeCiclo = Arestas.Any(x => x.PossuiLaco());
 
-        var grauEntradas = Arestas.Count(x => x.Destino.Nome == nomeVertice.Trim() && x.Origem.Nome != nomeVertice.Trim());
-        var grauSaidas = Arestas.Count(x => x.Origem.Nome == nomeVertice.Trim() && x.Destino.Nome != nomeVertice.Trim());
+        var grauEntradas = Arestas.Count(x => x.Destino.Nome == vertice.Nome.Trim() && x.Origem.Nome != vertice.Nome.Trim());
+        var grauSaidas = Arestas.Count(x => x.Origem.Nome == vertice.Nome.Trim() && x.Destino.Nome != vertice.Nome.Trim());
 
         if (existeCiclo)
         {
@@ -79,13 +80,64 @@ public class Grafo(int vertices)
         
         if (vertice != null)
         {
-            Console.WriteLine($"Vertice consultado: {vertice.Nome}:");
-            Console.WriteLine($"Graus de Entrada e Saída: G(E) = {grauEntradas} | G(S) = {grauSaidas}");
+            Console.WriteLine($"\nVertice consultado: {vertice.Nome}");
+            Console.WriteLine($"Apelido: \"{vertice.Apelido}\"");
+            Console.WriteLine($"\nGraus de Entrada e Saída: \n\n G(E) = {grauEntradas} | G(S) = {grauSaidas}");
         }
         else
         {
-            Console.WriteLine("Vertice não encontrado.");
+            Console.WriteLine("\nVertice não encontrado.");
         }
+    }
+
+    public void MostrarTempoProducaoMaquinas(Vertice maquinaInicial)
+    {
+        var tempoTotal = CalcularTempoProducao(maquinaInicial);
+        Console.WriteLine($"Tempo total de produção: {tempoTotal} horas");
+
+        Console.WriteLine("Gráfico de Tempo de Produção:");
+        Console.WriteLine("-------------------------------");
+
+        MostrarGraficoTempoProducao(maquinaInicial, 0);
+    }
+
+    private void MostrarGraficoTempoProducao(Vertice maquina, int nivel)
+    {
+        var horasTotais = CalcularTempoProducao(maquina);
+
+        if (horasTotais != 0)
+        {
+            Console.WriteLine($"{new string(' ', nivel * 2)}{maquina.Nome}: Total de {horasTotais} horas");
+        }
+
+        var arestasSelecionadas = Arestas.Where(a => a.Origem == maquina);
+        foreach (var aresta in arestasSelecionadas)
+        {
+            Console.WriteLine($"{new string(' ', nivel * 2 + 2)}{maquina.Nome} --({aresta.Peso}h)--> {aresta.Destino.Nome}");
+            MostrarGraficoTempoProducao(aresta.Destino, nivel + 1);
+        }
+    }
+
+
+
+    private int CalcularTempoProducao(Vertice maquina)
+    {
+        var tempoMaquina = 0;
+        var arestasSelecionadas = Arestas.Where(a => a.Origem == maquina);
+
+        foreach (var aresta in arestasSelecionadas)
+        {
+            var tempoAresta = aresta.Peso;
+            var tempoDependencia = CalcularTempoProducao(aresta.Destino);
+            var tempoTotal = tempoAresta + tempoDependencia;
+
+            if (tempoTotal > tempoMaquina)
+            {
+                tempoMaquina = tempoTotal;
+            }
+        }
+
+        return tempoMaquina;
     }
 
     public void AdicionarAresta(string origem,
@@ -220,12 +272,12 @@ public class Grafo(int vertices)
         resultado.Append("    ");
         for (int i = 0; i < qtdVertices; i++)
         {
-            resultado.Append(Vertices[i].Nome + "   ");
+            resultado.Append(Vertices[i].Apelido + "   ");
         }
         resultado.AppendLine();
         for (int i = 0; i < qtdVertices; i++)
         {
-            resultado.Append(Vertices[i].Nome + "   ");
+            resultado.Append(Vertices[i].Apelido + "   ");
             for (int j = 0; j < qtdVertices; j++)
             {
                 // Verifica se existe uma aresta entre os vértices i e j
@@ -268,7 +320,235 @@ public class Grafo(int vertices)
             VerificarDependenciasRecursivo(aresta.Destino, new HashSet<Vertice>(visitados), nivel + 1);
         }
     }
+    public void ExibirCaminhoCritico()
+    {
+        var caminhoCritico = ObterCaminhoCritico();
+        if (caminhoCritico.Count == 0)
+        {
+            Console.WriteLine("\nNão há caminho crítico.");
+            return;
+        }
+
+        ExibirTodosOsCaminhos();
+        Console.WriteLine("\n\nCaminho Crítico: ");
+        for (int i = 0; i < caminhoCritico.Count; i++)
+        {
+            var vertice = caminhoCritico[i];
+            Console.Write(vertice.Nome);
+
+            if (i < caminhoCritico.Count - 1)
+            {
+                var aresta = Arestas.First(a => a.Origem == vertice && a.Destino == caminhoCritico[i + 1]);
+                Console.Write($" --({aresta.Peso}h)--> ");
+            }
+        }
+
+        var tempoTotal = caminhoCritico.Zip(caminhoCritico.Skip(1), (origem, destino) =>
+            Arestas.First(a => a.Origem == origem && a.Destino == destino).Peso).Sum();
+
+        Console.WriteLine($"\nTempo total do caminho crítico: {tempoTotal} horas");
+
+        
+    }
+
+    public List<Vertice> ObterCaminhoCritico()
+    {
+        // Ordenar topologicamente os vértices
+        List<Vertice> ordemTopologica = OrdenarTopologicamente(Arestas, Vertices);
+        Dictionary<Vertice, int> distancia = new Dictionary<Vertice, int>();
+        Dictionary<Vertice, Vertice> predecessores = new Dictionary<Vertice, Vertice>();
+
+        // Inicializa todas as distâncias com o valor mínimo e predecessores como nulos
+        foreach (var vertice in ordemTopologica)
+        {
+            distancia[vertice] = int.MinValue;
+            predecessores[vertice] = null;
+        }
+
+        // Define a distância do primeiro vértice como 0
+        distancia[ordemTopologica[0]] = 0;
+
+        // Calcula as distâncias máximas na ordem topológica
+        foreach (var vertice in ordemTopologica)
+        {
+            foreach (var aresta in Arestas.Where(a => a.Origem == vertice))
+            {
+                int novaDistancia = distancia[vertice] + aresta.Peso;
+                if (novaDistancia > distancia[aresta.Destino])
+                {
+                    distancia[aresta.Destino] = novaDistancia;
+                    predecessores[aresta.Destino] = vertice;
+                }
+            }
+        }
+
+        // Encontra o vértice com a maior distância final (fim do caminho crítico)
+        Vertice verticeFinal = distancia.OrderByDescending(d => d.Value).First().Key;
+
+        // Constrói o caminho crítico partindo do vértice final
+        List<Vertice> caminhoCritico = new List<Vertice>();
+        Vertice verticeAtual = verticeFinal;
+
+        while (verticeAtual != null)
+        {
+            caminhoCritico.Add(verticeAtual);
+            verticeAtual = predecessores[verticeAtual];
+        }
+
+        // Reverte a lista para ter o caminho na ordem correta (do início ao fim)
+        caminhoCritico.Reverse();
+        return caminhoCritico;
+    }
+
+    public void ExibirTodosOsCaminhos()
+    {
+        // Ordenar topologicamente os vértices
+        List<Vertice> ordemTopologica = OrdenarTopologicamente(Arestas, Vertices);
+        Dictionary<Vertice, int> distancia = new Dictionary<Vertice, int>();
+        Dictionary<Vertice, Vertice> predecessores = new Dictionary<Vertice, Vertice>();
+
+        // Inicializa todas as distâncias com o valor mínimo e predecessores como nulos
+        foreach (var vertice in ordemTopologica)
+        {
+            distancia[vertice] = int.MinValue;
+            predecessores[vertice] = null;
+        }
+
+        // Define a distância do primeiro vértice como 0
+        distancia[ordemTopologica[0]] = 0;
+
+        // Calcula as distâncias máximas na ordem topológica
+        foreach (var vertice in ordemTopologica)
+        {
+            foreach (var aresta in Arestas.Where(a => a.Origem == vertice))
+            {
+                int novaDistancia = distancia[vertice] + aresta.Peso;
+                if (novaDistancia > distancia[aresta.Destino])
+                {
+                    distancia[aresta.Destino] = novaDistancia;
+                    predecessores[aresta.Destino] = vertice;
+                }
+            }
+        }
+
+        // Exibir todos os caminhos a partir do vértice inicial
+        foreach (var verticeFinal in Vertices)
+        {
+            if (distancia[verticeFinal] > int.MinValue)
+            {
+                // Constrói o caminho partindo do vértice final
+                List<Vertice> caminho = new List<Vertice>();
+                Vertice verticeAtual = verticeFinal;
+
+                while (verticeAtual != null)
+                {
+                    caminho.Add(verticeAtual);
+                    verticeAtual = predecessores[verticeAtual];
+                }
+
+                // Reverte o caminho para mostrar na ordem correta
+                caminho.Reverse();
+
+                // Verifica se o caminho tem mais de um vértice
+                if (caminho.Count > 1) // Apenas imprime se o caminho contém mais de um vértice
+                {
+                    // Monta a string do caminho com pesos
+                    string caminhoString = "";
+                    int totalHoras = 0;
+
+                    for (int i = 0; i < caminho.Count - 1; i++)
+                    {
+                        var origem = caminho[i];
+                        var destino = caminho[i + 1];
+
+                        // Encontra a aresta correspondente para obter o peso
+                        var aresta = Arestas.FirstOrDefault(a => a.Origem == origem && a.Destino == destino);
+                        if (aresta != null)
+                        {
+                            caminhoString += $"{origem.Nome} --({aresta.Peso}h)--> ";
+                            totalHoras += aresta.Peso;
+                        }
+                    }
+                    // Adiciona o último vértice ao caminho
+                    caminhoString += caminho.Last().Nome;
+
+                    // Exibe o caminho e o tempo total
+                    Console.WriteLine($"Caminho: {caminhoString}, Tempo total: {totalHoras} horas");
+                }
+            }
+        }
+    }
+
+    public List<Vertice> OrdenarTopologicamente(List<Aresta> arestas, List<Vertice> vertices)
+    {
+        List<Vertice> ordemTopologica = new List<Vertice>();
+        HashSet<Vertice> visitados = new HashSet<Vertice>();
+        Dictionary<Vertice, int> distancias = vertices.ToDictionary(v => v, v => int.MinValue);
+
+        // Inicializa a distância do primeiro vértice como 0 (supondo que vertices[0] é a origem)
+        if (vertices.Count > 0)
+        {
+            distancias[vertices[0]] = 0;
+        }
+
+        // Visitar cada vértice
+        foreach (var vertice in vertices)
+        {
+            if (!visitados.Contains(vertice))
+            {
+                VisitarVertice(vertice, visitados, ordemTopologica, arestas);
+            }
+        }
+
+        // Reverte a ordem topológica
+        ordemTopologica.Reverse();
+
+        // Atualiza as distâncias com base nas arestas
+        foreach (var vertice in ordemTopologica)
+        {
+            // Busca todas as arestas cujo vértice atual é a origem
+            foreach (var aresta in arestas.Where(a => a.Origem == vertice))
+            {
+                int novaDistancia = distancias[vertice] + aresta.Peso;
+                if (novaDistancia > distancias[aresta.Destino])
+                {
+                    distancias[aresta.Destino] = novaDistancia;
+                }
+            }
+        }
+
+        // Encontrar o maior caminho
+        //Vertice destinoFinal = ordemTopologica.OrderByDescending(v => distancias[v]).First();
+        //Console.WriteLine($"\nCaminho crítico termina no vértice: {destinoFinal.Nome}, com tempo total de: {distancias[destinoFinal]} horas!\n");
+
+        return ordemTopologica;
+    }
+
+    // Função auxiliar para visitar os vértices na ordem topológica
+    private void VisitarVertice(Vertice vertice, HashSet<Vertice> visitados, List<Vertice> ordemTopologica, List<Aresta> arestas)
+    {
+        visitados.Add(vertice);
+
+        // Visita todos os destinos a partir das arestas que saem do vértice
+        foreach (var aresta in arestas.Where(a => a.Origem == vertice))
+        {
+            if (!visitados.Contains(aresta.Destino))
+            {
+                VisitarVertice(aresta.Destino, visitados, ordemTopologica, arestas);
+            }
+        }
+
+        // Adiciona o vértice à lista da ordem topológica
+        ordemTopologica.Add(vertice);
+    }
+
+    // Converte índice em letra (0 = A, 1 = B, etc.)
+    private string IndiceParaLetra(int indice)
+    {
+        return ((char)('A' + indice)).ToString();
+    }
+
 
     public static Grafo NovoGrafo(int vertices)
-    => new(vertices);
+        => new(vertices);
 }

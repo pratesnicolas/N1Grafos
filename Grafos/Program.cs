@@ -25,6 +25,7 @@ public sealed class Program
             Console.WriteLine("6 - Atualizar vértice.");
             Console.WriteLine("7 - Consultar aresta.");
             Console.WriteLine("8 - Consultar vértice.");
+            Console.WriteLine("8 - Exibir características do grafo.");
             Console.WriteLine("9 - Submenu: Funções.");
             Console.WriteLine("0 - Encerrar.");
 
@@ -90,10 +91,7 @@ public sealed class Program
     {
         Console.WriteLine("\nVertices disponiveis:\n");
 
-        for (var i = 0; i < grafo.Vertices.Count; i++)
-        {
-            Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
-        }
+        ShowVertices(grafo);
 
         Console.Write("\nInforme o vertice que deseja verificar as dependencias: ");
         var idxVertice = int.Parse(Console.ReadLine()) - 1;
@@ -173,20 +171,34 @@ public sealed class Program
     public static void RemoveVertice(Grafo grafo)
     {
         Console.WriteLine("\nEscolha qual o vértice que deseja remover:");
+        ShowVertices(grafo);
+
         Console.WriteLine(grafo.MostrarVertices());
-        var verticeParaRemover = Console.ReadLine();
-        grafo.RemoverVertice(verticeParaRemover);
+        var indexVertice = int.Parse(Console.ReadLine()) - 1;
+
+        var vertice = grafo.Vertices[indexVertice].Nome;
+        grafo.RemoverVertice(vertice);
         Console.WriteLine(grafo.ExibirMatriz());
-        Console.WriteLine($"\nVertice {verticeParaRemover} removido com sucesso!");
+        Console.WriteLine($"\nVertice {vertice} removido com sucesso!");
     }
 
     public static void AddVertice(Grafo grafo)
     {
         Console.WriteLine("\nInforme o nome do vértice que deseja adicionar:");
         var vertice = Console.ReadLine();
-        grafo.AdicionarVertice(vertice);
-        Console.WriteLine(grafo.ExibirMatriz());
-        Console.WriteLine($"\nVertice {vertice} adicionado com sucesso!");
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.AdicionarVertice(vertice);
+            Console.WriteLine(grafo.ExibirMatriz());
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+
     }
 
     public static void AddAresta(Grafo grafo)
@@ -353,10 +365,7 @@ public sealed class Program
     {
         Console.WriteLine("\nSelecione a máquina inicial:");
 
-        for (var i = 0; i < grafo.Vertices.Count; i++)
-        {
-            Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
-        }
+        ShowVertices(grafo);
 
         var opcaoInput = Console.ReadLine();
         var continueDisplay = true;

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Grafos.Classes;
@@ -13,6 +14,13 @@ public class Grafo(int vertices)
     {
         var idx = Vertices.Count;
         var vertice = new Vertice(novoVertice, IndiceParaLetra(idx));
+        if(Vertices.Any(x => x.Nome == novoVertice.Trim()))
+        {
+            Console.WriteLine($"O vértice {novoVertice} já existe na matriz.");
+            return;
+
+        }
+
         Vertices.Add(vertice);
         var qtdVertices = Vertices.Count;
         var novaMatriz = new int[qtdVertices, qtdVertices];
@@ -24,6 +32,8 @@ public class Grafo(int vertices)
             }
         }
         Matriz = novaMatriz;
+
+        Console.WriteLine($"\nVertice {vertice.Nome} adicionado com sucesso!");
     }
 
     public void RemoverVertice(string nomeVertice)
@@ -157,6 +167,12 @@ public class Grafo(int vertices)
                                 peso);
         Arestas.Add(aresta);
 
+        if (Matriz[Vertices.IndexOf(verticeOrigem), Vertices.IndexOf(verticeDestino)] > 0)
+        {
+            Console.WriteLine($"Essa aresta já existe.");
+            return;
+        }
+
         Matriz[Vertices.IndexOf(verticeOrigem), Vertices.IndexOf(verticeDestino)] = aresta.Peso;
     }
     public void RemoverAresta(Vertice origem,
@@ -180,6 +196,8 @@ public class Grafo(int vertices)
         Vertice verticeOrigem = Vertices.Find(x => x.Nome.Equals(origem, StringComparison.CurrentCultureIgnoreCase));
         Vertice verticeDestino = Vertices.Find(x => x.Nome.Equals(destino, StringComparison.CurrentCultureIgnoreCase));
 
+
+       
         if (verticeOrigem is null || verticeDestino is null)
         {
             throw new Exception("O vertice de origem ou de destino não existem.");
@@ -200,7 +218,8 @@ public class Grafo(int vertices)
 
         if (origem is null || destino is null)
         {
-            throw new Exception("O vertice de origem ou de destino não existem.");
+            Console.WriteLine("O vértice de origem ou destino não existe.");
+            return;
         }
 
         var aresta = Arestas.FirstOrDefault(x => x.Origem == origem && x.Destino == destino);

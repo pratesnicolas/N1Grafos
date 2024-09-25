@@ -26,6 +26,7 @@ public sealed class Program
             Console.WriteLine("7 - Consultar aresta.");
             Console.WriteLine("8 - Consultar vértice.");
             Console.WriteLine("9 - Verificar dependências.");
+            Console.WriteLine("10 - Verificar máquinas quem podem trabalhar em paralelo.");
             Console.WriteLine("0 - Encerrar.");
 
             Console.WriteLine("\nEscolha sua opção: ");
@@ -243,7 +244,6 @@ public sealed class Program
         Console.WriteLine("\nInforme o código do vértice de destino da aresta:");
         var idxEndVertice = int.Parse(Console.ReadLine()) - 1;
 
-
         var continueDisplay = true;
 
         while (continueDisplay)
@@ -275,5 +275,11 @@ public sealed class Program
             Console.Clear();
         }
         
+    }
+
+    public static void ShowMaquinasParalelas (Grafo grafo)
+    {
+      
+
     }
 }

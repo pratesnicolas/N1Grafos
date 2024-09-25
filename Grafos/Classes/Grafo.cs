@@ -27,6 +27,11 @@ public class Grafo(int vertices)
     public void RemoverVertice(string nomeVertice)
     {
         var vertice = Vertices.FirstOrDefault(x => x.Nome == nomeVertice.Trim());
+        if(vertice is null)
+        {
+            Console.WriteLine($"Vértice {nomeVertice} não encontrado.");
+            return;
+        }
         Vertices.Remove(vertice);
         var arestasParaRemover = Arestas.Where(x => x.Origem.Nome == vertice.Nome || x.Destino.Nome == vertice.Nome).ToList();
         foreach (var aresta in arestasParaRemover)
@@ -61,7 +66,7 @@ public class Grafo(int vertices)
     {
         var vertice = Vertices.FirstOrDefault(x => x.Nome.Equals(nomeVertice.Trim(), StringComparison.CurrentCultureIgnoreCase));
 
-        var existeCiclo = Arestas.Count(x => x.Origem.Nome == nomeVertice.Trim() && x.Destino.Nome == nomeVertice.Trim()) > 0;
+        var existeCiclo = Arestas.Any(x => x.PossuiLaco());
 
         var grauEntradas = Arestas.Count(x => x.Destino.Nome == nomeVertice.Trim() && x.Origem.Nome != nomeVertice.Trim());
         var grauSaidas = Arestas.Count(x => x.Origem.Nome == nomeVertice.Trim() && x.Destino.Nome != nomeVertice.Trim());
@@ -128,12 +133,7 @@ public class Grafo(int vertices)
             throw new Exception("O vertice de origem ou de destino não existem.");
         }
 
-        var aresta = Arestas.FirstOrDefault(x => x.Origem == verticeOrigem && x.Destino == verticeDestino);
-        if (aresta is null)
-        {
-            throw new Exception("A aresta não existe.");
-        }
-
+        var aresta = Arestas.FirstOrDefault(x => x.Origem == verticeOrigem && x.Destino == verticeDestino) ?? throw new Exception("A aresta não existe.");
         var oldPeso = aresta.Peso;
 
         aresta.Peso = peso;
@@ -242,6 +242,12 @@ public class Grafo(int vertices)
         var maquina = Vertices[idxMaquina];
         var visitados = new HashSet<Vertice>();
         VerificarDependenciasRecursivo(maquina, visitados, 0);
+    }
+
+    public int VerificarMaiorPeso()
+    {
+        var maiorPeso = Arestas.Max().Peso;
+        return maiorPeso;
     }
 
     private void VerificarDependenciasRecursivo(Vertice maquina, HashSet<Vertice> visitados, int nivel)

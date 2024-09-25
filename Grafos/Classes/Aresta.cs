@@ -9,8 +9,7 @@ public class Aresta(Vertice origem,
 
     public bool PossuiLaco()
     {
-        //Verificar a lógica
-        return Origem.Nome == Destino.Nome;
+        return Origem.Nome.Trim() == Destino.Nome.Trim();
     }
     public bool PossuiValor()
     => Peso > 0;

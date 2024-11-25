@@ -1,0 +1,21 @@
+Vertice_Origem,Vertice_Destino,Peso
+Difusão de Silício,Inspeção Optica,2
+Difusão de Silício,Gravação de Circuito,5
+Difusão de Silício,Teste de Desempenho,2
+Difusão de Silício,Fotolitografia,2
+Difusão de Silício,Embalagem,6
+Inspeção Optica,Remoção de Material,2
+Gravação de Circuito,Implantação Ionica,5
+Gravação de Circuito,Teste de Desempenho,4
+Gravação de Circuito,Embalagem,3
+Remoção de Material,Montagem de Chip,8
+Fotolitografia,Deposição de Camada Metálica,2
+Fotolitografia,Teste de Desempenho,6
+Fotolitografia,Montagem de Chip,7
+Deposição de Camada Metálica,Gravação de Circuito,3
+Deposição de Camada Metálica,Embalagem,4
+Teste de Desempenho,Embalagem,6
+Montagem de Chip,Teste de Desempenho,3
+Montagem de Chip,Embalagem,2
+Implantação Ionica,Remoção de Material,3
+Implantação Ionica,Inspeção Optica,7

@@ -28,6 +28,7 @@ public sealed class Program
             Console.WriteLine("9 - Submenu: Funções.");
             Console.WriteLine("10 - Listar informações do grafo.");
             Console.WriteLine("11 - Exibir pesos.");
+            Console.WriteLine("12 - Djikstra");
             Console.WriteLine("0 - Encerrar.");
 
             Console.WriteLine("\nEscolha sua opção: ");
@@ -72,6 +73,9 @@ public sealed class Program
                         break;
                     case 11:
                         ExibirMatrizPesos(grafo);
+                        break;
+                    case 12:
+                        Djisktra(grafo);
                         break;
                     default:
                         Console.Clear();
@@ -465,6 +469,35 @@ public sealed class Program
         {
             Console.Clear();
             grafo.ExibirMatrizPesos();
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+    }
+
+
+    public static void Djisktra(Grafo grafo)
+    {
+        Console.WriteLine("\nVértices disponiveis:\n");
+
+        for (var i = 0; i < grafo.Vertices.Count; i++)
+        {
+            Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
+        }
+
+        Console.WriteLine("\nInforme o código do vértice de origem:");
+        var idxStartVertice = int.Parse(Console.ReadLine()) - 1;
+
+        Console.WriteLine("\nInforme o código do vértice de destino");
+        var idxEndVertice = int.Parse(Console.ReadLine()) - 1;
+
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.Dijkstra(idxStartVertice, idxEndVertice);
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;

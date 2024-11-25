@@ -560,6 +560,13 @@ public class Grafo(int vertices)
         Console.WriteLine($"Vértices independentes: {verticesIndependentes}");
     }
 
+    public void Dijkstra(int origem, int destino)
+    {
+        var dijkstra = new Dijkstra();
+        dijkstra.AlgoritmoDijkstra(Matriz, origem, destino, Vertices.Count);
+    }
+
+
     public void MostrarCaracteristicas()
     {
         var caracteristicas = string.Empty;

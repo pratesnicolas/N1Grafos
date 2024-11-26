@@ -566,6 +566,18 @@ public class Grafo(int vertices)
         dijkstra.AlgoritmoDijkstra(Matriz, origem, destino, Vertices.Count);
     }
 
+    public void BellmanFord(int origem, int destino)
+    {
+        var bellmanFord = new BellmanFord();
+        bellmanFord.AlgorimoBellmanFord(this, origem, destino);
+    }
+
+    public void FloydWarshall()
+    {
+        var floydWarshall = new FloydWarshall();
+        floydWarshall.AlgoritmoFloydWarshall(Matriz, Vertices.Count);
+    }
+
 
     public void MostrarCaracteristicas()
     {

@@ -29,6 +29,8 @@ public sealed class Program
             Console.WriteLine("10 - Listar informações do grafo.");
             Console.WriteLine("11 - Exibir pesos.");
             Console.WriteLine("12 - Djikstra");
+            Console.WriteLine("13 - Bellman-Ford");
+            Console.WriteLine("14 - Floyd-Warshall");
             Console.WriteLine("0 - Encerrar.");
 
             Console.WriteLine("\nEscolha sua opção: ");
@@ -77,6 +79,12 @@ public sealed class Program
                     case 12:
                         Djisktra(grafo);
                         break;
+                    case 13:
+                        BellmanFord(grafo);
+                        break;
+                    case 14:
+                        ShowFloydWarshall(grafo);
+                        break;
                     default:
                         Console.Clear();
                         Console.WriteLine("Opcao invalida. Tente novamente.");
@@ -90,7 +98,7 @@ public sealed class Program
                     default:
                         Console.Clear();
                         Console.WriteLine("Opcao invalida. Tente novamente.");
-                     break;
+                        break;
                 }
             }
 
@@ -222,7 +230,7 @@ public sealed class Program
         Console.WriteLine("\nInforme o código do vértice de origem:");
         var indexOrigem = int.Parse(Console.ReadLine()) - 1;
         Console.WriteLine("\nInforme o código do vértice de destino:");
-        var indexDestino = int.Parse(Console.ReadLine()) -1;
+        var indexDestino = int.Parse(Console.ReadLine()) - 1;
         Console.WriteLine("\nInforme o peso da aresta:");
         var peso = int.Parse(Console.ReadLine());
 
@@ -237,7 +245,7 @@ public sealed class Program
     {
         Console.WriteLine("\nVértices disponiveis:\n");
         ShowVertices(grafo);
-        
+
         Console.Write("\nInforme o código do vértice de origem: ");
         var idxStartVertice = int.Parse(Console.ReadLine()) - 1;
         Console.WriteLine("\nInforme o código do vértice de destino: ");
@@ -341,7 +349,7 @@ public sealed class Program
             continueDisplay = false;
             Console.Clear();
         }
-       
+
     }
 
     public static void ShowVertice(Grafo grafo)
@@ -367,7 +375,7 @@ public sealed class Program
             continueDisplay = false;
             Console.Clear();
         }
-        
+
     }
 
     public static void VerifyProductionTime(Grafo grafo)
@@ -504,6 +512,50 @@ public sealed class Program
             Console.Clear();
         }
     }
+
+    public static void BellmanFord(Grafo grafo)
+    {
+        Console.WriteLine("\nVértices disponiveis:\n");
+
+        for (var i = 0; i < grafo.Vertices.Count; i++)
+        {
+            Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
+        }
+
+        Console.WriteLine("\nInforme o código do vértice de origem:");
+        var idxStartVertice = int.Parse(Console.ReadLine()) - 1;
+
+        Console.WriteLine("\nInforme o código do vértice de destino");
+        var idxEndVertice = int.Parse(Console.ReadLine()) - 1;
+
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.BellmanFord(idxStartVertice, idxEndVertice);
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+    }
+
+    public static void ShowFloydWarshall(Grafo grafo)
+    {
+       
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.FloydWarshall();
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+    }
     public static void ShowVertices(Grafo grafo)
     {
         for (var i = 0; i < grafo.Vertices.Count; i++)
@@ -511,4 +563,4 @@ public sealed class Program
             Console.WriteLine($"{i + 1} - {grafo.Vertices[i].Nome}");
         }
     }
-} 
+}

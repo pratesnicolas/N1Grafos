@@ -1,4 +1,6 @@
-﻿namespace Grafos.Classes;
+﻿using System.Runtime;
+
+namespace Grafos.Classes;
 
 public class Dijkstra
 {

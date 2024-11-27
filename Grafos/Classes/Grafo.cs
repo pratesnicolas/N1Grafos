@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -373,6 +374,22 @@ public class Grafo(int vertices)
 
     }
 
+    public void RealizarBuscaProfundidade(int idxVerticeOrigem, int idxVerticeDestino)
+    {
+        var verticeOrigem = Vertices[idxVerticeOrigem];
+        var verticeDestino = Vertices[idxVerticeDestino];
+        
+        BuscaEmProfundidade(verticeOrigem, verticeDestino);
+    }
+
+    public void RealizarBuscaLargura(int idxVerticeOrigem, int idxVerticeDestino)
+    {
+        var verticeOrigem = Vertices[idxVerticeOrigem];
+        var verticeDestino = Vertices[idxVerticeDestino];
+
+        BuscaEmLargura(verticeOrigem, verticeDestino);
+    }
+
     public List<Vertice> ObterCaminhoCritico()
     {
         // Ordenar topologicamente os vértices
@@ -562,20 +579,46 @@ public class Grafo(int vertices)
 
     public void Dijkstra(int origem, int destino)
     {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
         var dijkstra = new Dijkstra();
         dijkstra.AlgoritmoDijkstra(Matriz, origem, destino, Vertices.Count, Vertices);
+        stopWatch.Stop();
+
+        long elapsedTicks = stopWatch.ElapsedTicks;
+        double elapsedMicroseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000;
+        double elapsedNanoseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000_000;
+
+        Console.WriteLine($"\nTempo de processamento: {stopWatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
     }
 
     public void BellmanFord(int origem, int destino)
     {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
         var bellmanFord = new BellmanFord();
         bellmanFord.AlgorimoBellmanFord(this, origem, destino);
+        stopWatch.Stop();
+
+        long elapsedTicks = stopWatch.ElapsedTicks;
+        double elapsedMicroseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000;
+        double elapsedNanoseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000_000;
+
+        Console.WriteLine($"\nTempo de processamento: {stopWatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
     }
 
     public void FloydWarshall()
     {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
         var floydWarshall = new FloydWarshall();
         floydWarshall.AlgoritmoFloydWarshall(Matriz, Vertices);
+        stopWatch.Stop();
+        long elapsedTicks = stopWatch.ElapsedTicks;
+        double elapsedMicroseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000;
+        double elapsedNanoseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000_000;
+
+        Console.WriteLine($"\nTempo de processamento: {stopWatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
     }
 
 
@@ -598,6 +641,261 @@ public class Grafo(int vertices)
 
         }
 
+    }
+
+    public void BuscaEmProfundidade(Vertice origem, Vertice destino)
+    {
+        if (origem == null || destino == null)
+        {
+            Console.WriteLine("Vértice de origem ou destino inválido.");
+            return;
+        }
+
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        var visitados = new HashSet<string>();
+        var caminho = new Dictionary<string, string>();
+        var custo = new Dictionary<string, int>();
+        var todosCaminhos = new List<Caminho>();
+        var caminhoAtual = new Caminho([], 0);
+
+        custo[origem.Apelido] = 0;
+
+        DfsTodosCaminhos(origem, destino, visitados, caminho, custo, todosCaminhos, caminhoAtual);
+
+        stopwatch.Stop();
+
+        if (todosCaminhos.Count > 0)
+        {
+            Console.WriteLine("\nCaminhos encontrados até o destino:");
+            foreach (var caminhoEncontrado in todosCaminhos.OrderBy(c => c.CustoTotal))
+            {
+                Console.WriteLine("\n");
+                ExibirCaminho(caminhoEncontrado.Vertices);
+                
+            }
+
+            var caminhoOtimo = todosCaminhos.OrderBy(c => c.CustoTotal).First();
+            Console.WriteLine("\n============= Caminho ótimo =============\n");
+            ExibirCaminho(caminhoOtimo.Vertices);
+        }
+        else
+        {
+            Console.WriteLine("\nCaminho não encontrado até o destino.");
+        }
+
+        long elapsedTicks = stopwatch.ElapsedTicks;
+        double elapsedMicroseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000;
+        double elapsedNanoseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000_000;
+
+        Console.WriteLine($"\nTempo de processamento: {stopwatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
+    }
+
+    private void DfsTodosCaminhos(Vertice atual, Vertice destino, HashSet<string> visitados, Dictionary<string, string> caminho,
+        Dictionary<string, int> custo, List<Caminho> todosCaminhos, Caminho caminhoAtual)
+    {
+        visitados.Add(atual.Apelido);
+        caminhoAtual.Vertices.Add(atual);
+
+        if (atual.Equals(destino))
+        {
+            caminhoAtual.CustoTotal = ObterCustoDoCaminho(caminhoAtual.Vertices);
+            todosCaminhos.Add(new Caminho([..caminhoAtual.Vertices], caminhoAtual.CustoTotal));
+        }
+        else
+        {
+            foreach (var vizinho in ObterVizinhos(atual))
+            {
+                if (!visitados.Contains(vizinho.Apelido))
+                {
+                    caminho[vizinho.Apelido] = atual.Apelido;
+                    custo[vizinho.Apelido] = custo[atual.Apelido] + ObterPeso(atual, vizinho);
+                    DfsTodosCaminhos(vizinho, destino, visitados, caminho, custo, todosCaminhos, caminhoAtual);
+                }
+            }
+        }
+
+        visitados.Remove(atual.Apelido);
+        caminhoAtual.Vertices.Remove(atual);
+        caminhoAtual.CustoTotal = ObterCustoDoCaminho(caminhoAtual.Vertices);
+    }
+
+    public List<Vertice> ObterVizinhos(Vertice atual)
+    {
+        List<Vertice> vizinhos = new List<Vertice>();
+        for (int i = 0; i < Vertices.Count; i++)
+        {
+            if (Matriz[Vertices.IndexOf(atual), i] != 0)
+            {
+                vizinhos.Add(Vertices[i]);
+            }
+        }
+        return vizinhos;
+    }
+
+    public int ObterPeso(Vertice origem, Vertice destino)
+    {
+        return Arestas.FirstOrDefault(a => a.Origem == origem && a.Destino == destino)?.Peso ?? 0;
+    }
+
+    private void ExibirCaminho(List<Vertice> caminho)
+    {
+        var custoTotal = 0;
+        for (int i = 0; i < caminho.Count - 1; i++)
+        {
+            var verticeAtual = caminho[i];
+            var proximoVertice = caminho[i + 1];
+            
+            var aresta = Arestas.FirstOrDefault(a => a.Origem == verticeAtual && a.Destino == proximoVertice);
+
+            if (aresta != null)
+            {
+                Console.Write($"{verticeAtual.Nome} --({aresta.Peso})--> ");
+                custoTotal += aresta.Peso;
+            }
+            else
+            {
+                Console.Write($"{verticeAtual.Nome} -> ");
+            }
+        }
+
+        // Exibir o último vértice sem seta
+        Console.WriteLine(caminho.Last().Nome);
+        Console.WriteLine($"\tCusto total: {custoTotal} hrs");
+    }
+
+    private int ObterCustoDoCaminho(List<Vertice> caminho)
+    {
+        var custoTotal = 0;
+
+        for (int i = 0; i < caminho.Count - 1; i++)
+        {
+            var verticeAtual = caminho[i];
+            var proximoVertice = caminho[i + 1];
+
+            var peso = ObterPeso(verticeAtual, proximoVertice);
+
+            if (peso != 0)
+            {
+                custoTotal += peso;
+            }
+        }
+
+        return custoTotal;
+
+    }
+
+    private bool Dfs(Vertice atual, Vertice destino, HashSet<Vertice> visitados, Dictionary<Vertice, Vertice> caminho, Dictionary<Vertice, int> custo, int custoAtual)
+    {
+        if (atual == destino)
+        {
+            custo[atual] = custoAtual;
+            return true;
+        }
+
+        visitados.Add(atual);
+
+        foreach (Aresta aresta in Arestas)
+        {
+            if (aresta.Origem == atual && !visitados.Contains(aresta.Destino))
+            {
+                caminho[aresta.Destino] = atual;
+                custo[aresta.Destino] = custoAtual + aresta.Peso;
+
+                if (Dfs(aresta.Destino, destino, visitados, caminho, custo, custoAtual + aresta.Peso))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void BuscaEmLargura(Vertice origem, Vertice destino)
+    {
+        if (origem == null || destino == null)
+        {
+            Console.WriteLine("Vértice de origem ou destino inválido.");
+            return;
+        }
+
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        var visitados = new HashSet<Vertice>();
+        var fila = new Queue<Vertice>();
+        var caminho = new Dictionary<Vertice, Vertice>();
+        var custo = new Dictionary<Vertice, int>();
+        var todosCaminhos = new List<Caminho>();
+
+        fila.Enqueue(origem);
+        custo[origem] = 0;
+        while (fila.Count > 0)
+        {
+            Vertice verticeAtual = fila.Dequeue();
+
+            if (verticeAtual == destino)
+            {
+                var caminhoAtual = new Caminho(new List<Vertice>(), 0);
+                Vertice v = destino;
+                while (v != null)
+                {
+                    caminhoAtual.Vertices.Insert(0, v);
+                    caminho.TryGetValue(v, out v);
+                }
+
+                caminhoAtual.CustoTotal = ObterCustoDoCaminho(caminhoAtual.Vertices);
+
+                if (!todosCaminhos.Any(c => c.Vertices.SequenceEqual(caminhoAtual.Vertices)))
+                {
+                    todosCaminhos.Add(new Caminho(new List<Vertice>(caminhoAtual.Vertices), caminhoAtual.CustoTotal));
+                }
+            }
+
+            if (!visitados.Contains(verticeAtual))
+            {
+                visitados.Add(verticeAtual);
+
+                foreach (Aresta aresta in Arestas)
+                {
+                    if (aresta.Origem == verticeAtual && !visitados.Contains(aresta.Destino))
+                    {
+                        fila.Enqueue(aresta.Destino);
+                        caminho[aresta.Destino] = verticeAtual;
+                        custo[aresta.Destino] = custo[verticeAtual] + aresta.Peso;
+                    }
+                }
+            }
+        }
+
+        stopwatch.Stop();
+
+        if (todosCaminhos.Count > 0)
+        {
+            Console.WriteLine("\nCaminhos encontrados até o destino:\n");
+            foreach (var caminhoEncontrado in todosCaminhos)
+            {
+                Console.WriteLine(string.Join(" -> ", caminhoEncontrado.Vertices.Select(v => v.Nome)));
+                Console.WriteLine($"\tCusto total: {caminhoEncontrado.CustoTotal} hrs");
+            }
+
+            var caminhoOtimo = todosCaminhos.OrderBy(c => c.CustoTotal).First();
+            Console.WriteLine("\n============= Caminho ótimo =============\n");
+            Console.WriteLine(string.Join(" -> ", caminhoOtimo.Vertices.Select(v => v.Nome)));
+            Console.WriteLine($"\tCusto total: {caminhoOtimo.CustoTotal} hrs");
+        }
+        else
+        {
+            Console.WriteLine("\nCaminho não encontrado até o destino.\n");
+        }
+
+        var elapsedTicks = stopwatch.ElapsedTicks;
+        var elapsedMicroseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000;
+        var elapsedNanoseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000_000;
+
+        Console.WriteLine($"\nTempo de processamento: {stopwatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
     }
 
     // Função auxiliar para visitar os vértices na ordem topológica

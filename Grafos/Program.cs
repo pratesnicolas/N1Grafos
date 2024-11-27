@@ -32,6 +32,8 @@ public sealed class Program
             Console.WriteLine("12 - Djikstra");
             Console.WriteLine("13 - Bellman-Ford");
             Console.WriteLine("14 - Floyd-Warshall");
+            Console.WriteLine("15 - Busca em Profundidade");
+            Console.WriteLine("16 - Busca em Largura");
             Console.WriteLine("0 - Encerrar.");
 
             Console.WriteLine("\nEscolha sua opção: ");
@@ -85,6 +87,12 @@ public sealed class Program
                         break;
                     case 14:
                         ShowFloydWarshall(grafo);
+                        break;
+                    case 15:
+                        ShowDepthSearch(grafo);
+                        break;
+                    case 16:
+                        ShowBreadthSearch(grafo);
                         break;
                     default:
                         Console.Clear();
@@ -506,18 +514,7 @@ public sealed class Program
         while (continueDisplay)
         {
             Console.Clear();
-            Stopwatch stopwatch = Stopwatch.StartNew();
             grafo.Dijkstra(idxStartVertice, idxEndVertice);
-            stopwatch.Stop();
-            long elapsedTicks = stopwatch.ElapsedTicks;
-            double tickFrequency = Stopwatch.Frequency;
-
-            double elapsedMicroseconds = (elapsedTicks / tickFrequency) * 1_000_000;
-            double elapsedNanoseconds = (elapsedTicks / tickFrequency) * 1_000_000_000;
-
-            Console.WriteLine($"Tempo de execução: {stopwatch.ElapsedMilliseconds} Milissegundos");
-            Console.WriteLine($"Tempo de execução: {elapsedMicroseconds:N2} Microssegundos");
-            Console.WriteLine($"Tempo de execução: {elapsedNanoseconds:N2} Nanosegundos");
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;
@@ -544,20 +541,8 @@ public sealed class Program
 
         while (continueDisplay)
         {
-            Console.Clear();
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            grafo.BellmanFord(idxStartVertice, idxEndVertice);
-            stopwatch.Stop();
-            long elapsedTicks = stopwatch.ElapsedTicks;
-            double tickFrequency = Stopwatch.Frequency;
-
-            double elapsedMicroseconds = (elapsedTicks / tickFrequency) * 1_000_000;
-            double elapsedNanoseconds = (elapsedTicks / tickFrequency) * 1_000_000_000;
-
-            Console.WriteLine($"Tempo de execução: {stopwatch.ElapsedMilliseconds} Milissegundos");
-            Console.WriteLine($"Tempo de execução: {elapsedMicroseconds:N2} Microssegundos");
-            Console.WriteLine($"Tempo de execução: {elapsedNanoseconds:N2} Nanosegundos");
-
+            Console.Clear();   
+            grafo.BellmanFord(idxStartVertice, idxEndVertice);      
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;
@@ -573,24 +558,65 @@ public sealed class Program
         while (continueDisplay)
         {
             Console.Clear();
-            Stopwatch stopwatch = Stopwatch.StartNew();
             grafo.FloydWarshall();
-            stopwatch.Stop();
-            long elapsedTicks = stopwatch.ElapsedTicks;
-            double tickFrequency = Stopwatch.Frequency;
-
-            double elapsedMicroseconds = (elapsedTicks / tickFrequency) * 1_000_000;
-            double elapsedNanoseconds = (elapsedTicks / tickFrequency) * 1_000_000_000;
-
-            Console.WriteLine($"Tempo de execução: {stopwatch.ElapsedMilliseconds} Milissegundos");
-            Console.WriteLine($"Tempo de execução: {elapsedMicroseconds:N2} Microssegundos");
-            Console.WriteLine($"Tempo de execução: {elapsedNanoseconds:N2} Nanosegundos");
+      ;
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;
             Console.Clear();
         }
     }
+
+    public static void ShowDepthSearch(Grafo grafo)
+    {
+        Console.WriteLine("\nVertices disponiveis:\n");
+
+        ShowVertices(grafo);
+
+        Console.Write("\nInforme o vertice de origem para a busca: ");
+        var idxVerticeOrigem = int.Parse(Console.ReadLine()) - 1;
+
+        Console.Write("\nInforme o vertice de destino para a busca: ");
+        var idxVerticeDestino = int.Parse(Console.ReadLine()) - 1;
+
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.RealizarBuscaProfundidade(idxVerticeOrigem, idxVerticeDestino);
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+    }
+
+    public static void ShowBreadthSearch(Grafo grafo)
+    {
+        Console.WriteLine("\nVertices disponiveis:\n");
+
+        ShowVertices(grafo);
+
+        Console.Write("\nInforme o vertice de origem para a busca: ");
+        var idxVerticeOrigem = int.Parse(Console.ReadLine()) - 1;
+
+        Console.Write("\nInforme o vertice de destino para a busca: ");
+        var idxVerticeDestino = int.Parse(Console.ReadLine()) - 1;
+
+        var continueDisplay = true;
+
+        while (continueDisplay)
+        {
+            Console.Clear();
+            grafo.RealizarBuscaLargura(idxVerticeOrigem, idxVerticeDestino);
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
+            Console.ReadKey();
+            continueDisplay = false;
+            Console.Clear();
+        }
+    }
+
     public static void ShowVertices(Grafo grafo)
     {
         for (var i = 0; i < grafo.Vertices.Count; i++)

@@ -563,7 +563,7 @@ public class Grafo(int vertices)
     public void Dijkstra(int origem, int destino)
     {
         var dijkstra = new Dijkstra();
-        dijkstra.AlgoritmoDijkstra(Matriz, origem, destino, Vertices.Count);
+        dijkstra.AlgoritmoDijkstra(Matriz, origem, destino, Vertices.Count, Vertices);
     }
 
     public void BellmanFord(int origem, int destino)
@@ -575,7 +575,7 @@ public class Grafo(int vertices)
     public void FloydWarshall()
     {
         var floydWarshall = new FloydWarshall();
-        floydWarshall.AlgoritmoFloydWarshall(Matriz, Vertices.Count);
+        floydWarshall.AlgoritmoFloydWarshall(Matriz, Vertices);
     }
 
 

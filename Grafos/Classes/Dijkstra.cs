@@ -2,6 +2,8 @@
 
 public class Dijkstra
 {
+
+    // Método para encontrar o índice do vértice com o menor custo .
     private int DistanciaMinima(int[] distancias, bool[] visitados, int qtdVertices)
     {
         int min = int.MaxValue;
@@ -19,29 +21,51 @@ public class Dijkstra
         return minIndex;
     }
 
-    private void MostrarCaminho(int[] distancias, int[] pai, int origem, int destino)
+    //Função auxiliar para imprimir o caminho
+    private void MostrarCaminho(int[] distancias, int[] pai, int origem, int destino, List<Vertice> vertices)
     {
-        Console.Write("Caminho mínimo entre {0} e {1}: ", origem, destino);
-
-        int crawl = destino;
-        Console.Write(crawl);
-
-        while (pai[crawl] != -1)
+        if (distancias[destino] == int.MaxValue)
         {
-            Console.Write(" <- {0}", pai[crawl]);
-            crawl = pai[crawl];
+            Console.WriteLine("Não existe um caminho de {0} a {1}", vertices[origem].Nome, vertices[destino].Nome);
+            return;
+        }
+
+        Console.Write("Caminho mínimo entre {0} e {1}: ", vertices[origem].Nome, vertices[destino].Nome);
+
+        // Cria uma pilha para armazenar o caminho
+        Stack<string> caminho = new Stack<string>();
+
+        // Rastrear o caminho a partir do destino
+        int crawl = destino;
+        while (crawl != origem)
+        {
+            caminho.Push(vertices[crawl].Nome);  // Adiciona o vértice ao caminho
+            crawl = pai[crawl];  // Move para o vértice anterior
+        }
+
+        // Adicionar o vértice de origem ao caminho
+        caminho.Push(vertices[origem].Nome);
+
+        while (caminho.Count > 0)
+        {
+            Console.Write(caminho.Pop());
+            if (caminho.Count > 0)
+            {
+                Console.Write(" -> ");
+            }
         }
 
         Console.WriteLine("\nCusto total: {0}", distancias[destino]);
     }
 
-    public void AlgoritmoDijkstra(int[,] graph, int origem, int destino, int qtdVertices)
+    public void AlgoritmoDijkstra(int[,] grafo, int origem, int destino, int qtdVertices, List<Vertice> vertices)
     {
         int[] distances = new int[qtdVertices]; // vetor para armazenar as distâncias mínimas
-        bool[] visited = new bool[qtdVertices]; // vetor para marcar os vértices visitados
+        bool[] visited = new bool[qtdVertices];  // vetor para marcar os vértices visitados
         int[] parent = new int[qtdVertices]; // vetor para armazenar os pais dos vértices
 
-        // Inicializa os valores das distâncias, visitados e pais
+
+        // Em primeiro lugar, iniciamos todas as distâncias como infinitas(int.MaxValue), visited como false e parent como -1
         for (int i = 0; i < qtdVertices; i++)
         {
             distances[i] = int.MaxValue;
@@ -49,26 +73,30 @@ public class Dijkstra
             parent[i] = -1;
         }
 
-        distances[origem] = 0; // a distância do vértice inicial é sempre 0
+        //Em segundo lugar, definimos a distância do vértice de origem a partir de si mesmo como 0
+        distances[origem] = 0;
 
-        // Encontra o caminho mínimo para todos os vértices
-        for (int count = 0; count < qtdVertices - 1; count++)
+        for (int count = 0; count < qtdVertices - 1; count++) //Então, encontramos o caminho mais curto para todos os vértices
         {
-            int u = DistanciaMinima(distances, visited, qtdVertices);
-            visited[u] = true;
+            //Para isso, devemos selecionar o vértice com distância mínima a partir do conjunto de vértices que ainda não foram processados.
+            int u = DistanciaMinima(distances, visited, qtdVertices); 
+            visited[u] = true; // Devemos marcar o vértice selecionado como visited para que não façamos o cálculo duas vezes.
+     
 
             for (int v = 0; v < qtdVertices; v++)
             {
-                if (!visited[v] && graph[u, v] != 0 && distances[u] != int.MaxValue && distances[u] + graph[u, v] < distances[v])
+                //Caso o caminho mais curto seja encontrado, definimos o novo valor o caminho mais curto
+                if (!visited[v] && grafo[u, v] != 0 && distances[u] != int.MaxValue && distances[u] + grafo[u, v] < distances[v])
                 {
-                    distances[v] = distances[u] + graph[u, v];
-                    parent[v] = u;
+                    distances[v] = distances[u] + grafo[u, v]; // Definindo o valor como o caminho mais curto
+                    parent[v] = u; //Reconstrução do caminho, vértice 'u' precede o vértice 'v'
                 }
             }
         }
 
-        // Imprime o caminho mínimo entre o vértice inicial e o vértice destino
-        MostrarCaminho(distances, parent, origem, destino);
+        //Depois de todos os vértices forem processados, devolvemos o resultado contendo o valor do caminho mais curto a partir de vértice de origem até o vértice de destino.
+
+        MostrarCaminho(distances, parent, origem, destino, vertices);
     }
 
 }

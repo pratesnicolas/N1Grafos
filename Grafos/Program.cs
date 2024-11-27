@@ -1,5 +1,6 @@
 ﻿using Grafos.Classes;
 using Grafos.Utils;
+using System.Diagnostics;
 
 namespace Grafos;
 
@@ -505,7 +506,18 @@ public sealed class Program
         while (continueDisplay)
         {
             Console.Clear();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             grafo.Dijkstra(idxStartVertice, idxEndVertice);
+            stopwatch.Stop();
+            long elapsedTicks = stopwatch.ElapsedTicks;
+            double tickFrequency = Stopwatch.Frequency;
+
+            double elapsedMicroseconds = (elapsedTicks / tickFrequency) * 1_000_000;
+            double elapsedNanoseconds = (elapsedTicks / tickFrequency) * 1_000_000_000;
+
+            Console.WriteLine($"Tempo de execução: {stopwatch.ElapsedMilliseconds} Milissegundos");
+            Console.WriteLine($"Tempo de execução: {elapsedMicroseconds:N2} Microssegundos");
+            Console.WriteLine($"Tempo de execução: {elapsedNanoseconds:N2} Nanosegundos");
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;
@@ -533,7 +545,19 @@ public sealed class Program
         while (continueDisplay)
         {
             Console.Clear();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             grafo.BellmanFord(idxStartVertice, idxEndVertice);
+            stopwatch.Stop();
+            long elapsedTicks = stopwatch.ElapsedTicks;
+            double tickFrequency = Stopwatch.Frequency;
+
+            double elapsedMicroseconds = (elapsedTicks / tickFrequency) * 1_000_000;
+            double elapsedNanoseconds = (elapsedTicks / tickFrequency) * 1_000_000_000;
+
+            Console.WriteLine($"Tempo de execução: {stopwatch.ElapsedMilliseconds} Milissegundos");
+            Console.WriteLine($"Tempo de execução: {elapsedMicroseconds:N2} Microssegundos");
+            Console.WriteLine($"Tempo de execução: {elapsedNanoseconds:N2} Nanosegundos");
+
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;
@@ -549,7 +573,18 @@ public sealed class Program
         while (continueDisplay)
         {
             Console.Clear();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             grafo.FloydWarshall();
+            stopwatch.Stop();
+            long elapsedTicks = stopwatch.ElapsedTicks;
+            double tickFrequency = Stopwatch.Frequency;
+
+            double elapsedMicroseconds = (elapsedTicks / tickFrequency) * 1_000_000;
+            double elapsedNanoseconds = (elapsedTicks / tickFrequency) * 1_000_000_000;
+
+            Console.WriteLine($"Tempo de execução: {stopwatch.ElapsedMilliseconds} Milissegundos");
+            Console.WriteLine($"Tempo de execução: {elapsedMicroseconds:N2} Microssegundos");
+            Console.WriteLine($"Tempo de execução: {elapsedNanoseconds:N2} Nanosegundos");
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey();
             continueDisplay = false;

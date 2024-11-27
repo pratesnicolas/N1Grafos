@@ -579,20 +579,47 @@ public class Grafo(int vertices)
 
     public void Dijkstra(int origem, int destino)
     {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
         var dijkstra = new Dijkstra();
         dijkstra.AlgoritmoDijkstra(Matriz, origem, destino, Vertices.Count);
+        stopWatch.Stop();
+
+        long elapsedTicks = stopWatch.ElapsedTicks;
+        double elapsedMicroseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000;
+        double elapsedNanoseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000_000;
+
+        Console.WriteLine($"\nTempo de processamento: {stopWatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
     }
 
     public void BellmanFord(int origem, int destino)
     {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
         var bellmanFord = new BellmanFord();
         bellmanFord.AlgorimoBellmanFord(this, origem, destino);
+        stopWatch.Stop();
+
+        long elapsedTicks = stopWatch.ElapsedTicks;
+        double elapsedMicroseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000;
+        double elapsedNanoseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000_000;
+
+        Console.WriteLine($"\nTempo de processamento: {stopWatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
     }
 
     public void FloydWarshall()
     {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
         var floydWarshall = new FloydWarshall();
         floydWarshall.AlgoritmoFloydWarshall(Matriz, Vertices.Count);
+        stopWatch.Stop();
+
+        long elapsedTicks = stopWatch.ElapsedTicks;
+        double elapsedMicroseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000;
+        double elapsedNanoseconds = (elapsedTicks / (double)Stopwatch.Frequency) * 1_000_000_000;
+
+        Console.WriteLine($"\nTempo de processamento: {stopWatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
     }
 
 
@@ -666,7 +693,8 @@ public class Grafo(int vertices)
         Console.WriteLine($"\nTempo de processamento: {stopwatch.ElapsedMilliseconds} ms / {elapsedMicroseconds} µs / {elapsedNanoseconds} ns\n");
     }
 
-    private void DfsTodosCaminhos(Vertice atual, Vertice destino, HashSet<string> visitados, Dictionary<string, string> caminho, Dictionary<string, int> custo, List<Caminho> todosCaminhos, Caminho caminhoAtual)
+    private void DfsTodosCaminhos(Vertice atual, Vertice destino, HashSet<string> visitados, Dictionary<string, string> caminho,
+        Dictionary<string, int> custo, List<Caminho> todosCaminhos, Caminho caminhoAtual)
     {
         visitados.Add(atual.Apelido);
         caminhoAtual.Vertices.Add(atual);
